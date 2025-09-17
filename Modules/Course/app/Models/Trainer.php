@@ -3,20 +3,16 @@
 namespace Modules\Course\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-// use Modules\Course\Database\Factories\TrainerFactory;
 
 class Trainer extends Model
 {
-    use HasFactory;
+    protected $table = 'trainers';
 
-    /**
-     * The attributes that are mass assignable.
-     */
-    protected $fillable = [];
-
-    // protected static function newFactory(): TrainerFactory
-    // {
-    //     // return TrainerFactory::new();
-    // }
+    // Mass assignment protection
+    protected $fillable = [
+        'name',
+        'email',
+        'phone',
+        'expertise',
+    ];
 }

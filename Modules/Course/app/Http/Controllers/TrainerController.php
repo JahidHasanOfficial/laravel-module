@@ -15,12 +15,20 @@ class TrainerController extends Controller
         $this->trainerService = $trainerService;
     }
 
+    // Index - list all trainers
     public function index()
     {
         $trainers = $this->trainerService->all();
-        return response()->json($trainers);
+        return view('course::backend.trainers.index', compact('trainers'));
     }
 
+    // Create - show form
+    public function create()
+    {
+        return view('course::backend.trainers.create');
+    }
+
+    // Store - save new trainer
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -30,32 +38,35 @@ class TrainerController extends Controller
             'expertise' => 'required|string',
         ]);
 
-        $trainer = $this->trainerService->create($data);
-        return response()->json($trainer, 201);
+        $this->trainerService->create($data);
+        return redirect()->route('trainers.index')->with('success', 'Trainer created successfully.');
     }
 
-    public function show($id)
+    // Edit - show edit form
+    public function edit($id)
     {
         $trainer = $this->trainerService->find($id);
-        return response()->json($trainer);
+        return view('course::backend.trainers.edit', compact('trainer'));
     }
 
+    // Update - save edited trainer
     public function update(Request $request, $id)
     {
         $data = $request->validate([
-            'name' => 'sometimes|string',
-            'email' => 'sometimes|email|unique:trainers,email,'.$id,
-            'phone' => 'sometimes|string',
-            'expertise' => 'sometimes|string',
+            'name' => 'required|string',
+            'email' => 'required|email|unique:trainers,email,'.$id,
+            'phone' => 'required|string',
+            'expertise' => 'required|string',
         ]);
 
-        $trainer = $this->trainerService->update($id, $data);
-        return response()->json($trainer);
+        $this->trainerService->update($id, $data);
+        return redirect()->route('trainers.index')->with('success', 'Trainer updated successfully.');
     }
 
+    // Destroy - delete trainer
     public function destroy($id)
     {
         $this->trainerService->delete($id);
-        return response()->json(['message' => 'Trainer deleted']);
+        return redirect()->route('trainers.index')->with('success', 'Trainer deleted successfully.');
     }
 }
