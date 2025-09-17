@@ -2,11 +2,13 @@
 
 namespace Modules\Course\Providers;
 
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
+use Modules\Course\Services\TrainerService;
+use Modules\Course\Repositories\TrainerRepository;
 
 class CourseServiceProvider extends ServiceProvider
 {
@@ -34,6 +36,13 @@ class CourseServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+         // Dependency Injection Bind
+         $this->app->singleton(TrainerRepository::class);
+        $this->app->singleton(TrainerService::class, function ($app) {
+            return new TrainerService($app->make(TrainerRepository::class));
+        });
+
+        
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
     }
